@@ -9,7 +9,7 @@ var hour = moment().hour();
 var loadItems = function() {
   items = JSON.parse(localStorage.getItem("items"));
 
-  // if nothing in localStorage, create a new object to track all task status arrays
+  // if nothing in localStorage, create a new object to track all items in array
   if (!items) {
       items = [
         {
@@ -94,7 +94,7 @@ var saveItems = function() {
     localStorage.setItem("items", JSON.stringify(items));
 };
 
-// select task text to edit
+// select item text to edit
 $(".description").on("click", function() {
   var itemP = $(this).find(".select");
   
@@ -111,7 +111,7 @@ $(".description").on("click", function() {
   textInput.trigger("focus");
 });
 
-// save edited task text
+// save edited item text
 $(".row").on("click", ".saveBtn", function() {
   // get the parent name attribute
   var timeVal = $(".textarea")
