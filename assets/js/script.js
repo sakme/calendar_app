@@ -14,43 +14,43 @@ var loadItems = function() {
       items = [
         {
           "time": 8,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 9,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 10,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 11,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 12,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 13,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 14,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 15,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 16,
-          "text": "temp"
+          "text": ""
         },
         {
           "time": 17,
-          "text": "temp"
+          "text": ""
         }];
   }
   
@@ -64,7 +64,9 @@ var loadItems = function() {
 var createItem = function(itemTime, itemText) {
   var itemDiv = $("#b" + itemTime);
 
-  var itemP = $("<p>").text(itemText);
+  var itemP = $("<p>")
+    .text(itemText)
+    .addClass("select");
   
   var evalTime = function() {
       if ((itemTime) < hour){
@@ -93,8 +95,10 @@ var saveItems = function() {
 };
 
 // select task text to edit
-$(".description").on("click", "p", function() {
-  var text = $(this)
+$(".description").on("click", function() {
+  var itemP = $(this).find(".select");
+  
+  var text = $(itemP)
     .text()
     .trim();
 
@@ -102,20 +106,20 @@ $(".description").on("click", "p", function() {
     .addClass("textarea")
     .val(text);
 
-  $(this).replaceWith(textInput);
+  $(itemP).replaceWith(textInput);
 
   textInput.trigger("focus");
 });
 
 // save edited task text
-$(".description").on("blur", "textarea", function() {
+$(".row").on("click", ".saveBtn", function() {
   // get the parent name attribute
-  var timeVal = $(this)
+  var timeVal = $(".textarea")
     .closest(".description")
     .attr("name")
 
   // get current value
-  var textVal = $(this)
+  var textVal = $(".textarea")
     .val()
     .trim();
 
@@ -123,15 +127,21 @@ $(".description").on("blur", "textarea", function() {
   
   items[index].text = textVal;
     
-  
   saveItems();
 
   // replace p element
   var itemP = $("<p>")
-    .text(textVal);
+    .text(textVal)
+    .addClass("select");
 
   // replace textarea with p element
-  $(this).replaceWith(itemP);
+  $(".textarea").replaceWith(itemP);
 });
 
+// load page
 loadItems();
+
+// refresh every 15 minutes
+setInterval(function() {
+  location.reload();
+}, 900000);
