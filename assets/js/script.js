@@ -2,8 +2,10 @@ var today = moment().format("dddd, MMMM Do YYYY");
 $("#currentDay").text(today);
 
 var items = [];
-
 var hour = moment().hour();
+var text = "";
+var time = "";
+var itemP = "";
 
 // load items
 var loadItems = function() {
@@ -96,11 +98,17 @@ var saveItems = function() {
 
 // select item text to edit
 $(".description").on("click", function() {
-  var itemP = $(this).find(".select");
+  itemP = $(this).find(".select");
   
-  var text = $(itemP)
+  text = $(itemP)
     .text()
     .trim();
+
+  time = $(itemP)
+  .closest(".description")
+  .attr("name")
+
+  console.log(time);
 
   var textInput = $("<textarea>")
     .addClass("textarea")
@@ -111,7 +119,34 @@ $(".description").on("click", function() {
   textInput.trigger("focus");
 });
 
-// save edited item text
+// save edited item on blur
+$(".description").on("blur", "textarea", function() {
+  // get the parent name attribute
+  var timeVal = $(".textarea")
+    .closest(".description")
+    .attr("name")
+
+  // get current value
+  var textVal = $(".textarea")
+    .val()
+    .trim();
+
+  index = items.findIndex((obj => obj.time == timeVal));
+  
+  items[index].text = textVal;
+    
+  saveItems();
+
+  // replace p element
+  var itemP = $("<p>")
+    .text(textVal)
+    .addClass("select");
+
+  // replace textarea with p element
+  $(".textarea").replaceWith(itemP);
+});
+
+// save edited item by clicking save button
 $(".row").on("click", ".saveBtn", function() {
   // get the parent name attribute
   var timeVal = $(".textarea")
